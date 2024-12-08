@@ -45,5 +45,5 @@ class BaseWrapper():
     async def _async_post(self, endpoint: str, data: dict):
         url = f"{self.base_url}/{endpoint}"
         async with ClientSession(loop=self.event_loop, headers={"user_agent": self.user_agent}) as session:
-            async with session.post(url, data) as response:
+            async with session.post(url, data=data) as response:
                 return response

@@ -4,24 +4,24 @@ from .base_wrapper import BaseWrapper
 from .models.maps import MapDetail
 from .models.users import UserDetail
 
-
 class BeatSaver(BaseWrapper):
+
     def get_maps_id(self, id: str) -> MapDetail:
         """Get map information from a map ID"""
         result = self._fetch(f"maps/id/{id}")
-        return MapDetail(result)
+        return MapDetail.from_data(result)
 
     def get_maps_hash(self, hash: str) -> MapDetail:
         """Get map information from a map hash"""
         result = self._fetch(f"maps/hash/{hash}")
-        return MapDetail(result)
+        return MapDetail.from_data(result)
 
-    def get_maps_uploader(self, id: str, page: int = 0) -> list:
+    def get_maps_uploader(self, id: str, page: int=0) -> list:
         """Get maps by a user"""
         result = self._fetch(f"maps/uploader/{id}/{page}")
         maps = list()
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
     def get_maps_latest(self) -> list:
@@ -29,52 +29,52 @@ class BeatSaver(BaseWrapper):
         result = self._fetch("maps/latest")
         maps = list()
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
-    def get_maps_plays(self, page: int = 0 ) -> list:
+    def get_maps_plays(self, page: int=0) -> list:
         """Get maps ordered by play count"""
         result = self._fetch(f"maps/plays/{page}")
         maps = list()
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
     def get_users_id(self, id: int) -> UserDetail:
         """Get user info"""
         result = self._fetch(f"users/id/{id}")
-        return UserDetail(result)
+        return UserDetail.from_data(result)
 
     def post_users_verify(self):
         """Verify user tokens (not implemented)"""
         raise NotImplementedError()
 
-    def get_search_text(self,  
-        page: int = 0,
-        automapper: bool = None, 
-        chroma: bool = None,
-        cinema: bool = None,
-        startDate: str = None, # api parameter "from"
-        fullspread: bool = None,
-        maxBpm: float = None,
-        maxDuration: int = None,
-        maxNps: float = None,
-        maxRating: float = None,
-        me: bool = None,
-        minBpm: float = None,
-        minDuration: int = None,
-        minNps: float = None,
-        minRating: float = None,
-        noodle: bool = None,
-        query: str = None, # api parameter "q"
-        ranked: bool = None,
-        sortOrder: str = "Relevance",
-        endDate: str = None, # api parameter "to"
+    def get_search_text(self,
+        page: int=0,
+        automapper: bool=None,
+        chroma: bool=None,
+        cinema: bool=None,
+        startDate: str=None,  # api parameter "from"
+        fullspread: bool=None,
+        maxBpm: float=None,
+        maxDuration: int=None,
+        maxNps: float=None,
+        maxRating: float=None,
+        me: bool=None,
+        minBpm: float=None,
+        minDuration: int=None,
+        minNps: float=None,
+        minRating: float=None,
+        noodle: bool=None,
+        query: str=None,  # api parameter "q"
+        ranked: bool=None,
+        sortOrder: str="Relevance",
+        endDate: str=None,  # api parameter "to"
         ) -> list:
     # Only explained a handful of parameters, majority are self-explanatory
         """
         Search for maps
-        
+
         Parameters
         ---
         query: str
@@ -133,10 +133,10 @@ class BeatSaver(BaseWrapper):
 
         result = self._fetch(f"search/text/{page}?{parameters_url[1:]}")
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
-    def post_vote(self, hash: str, direction: bool = True):
+    def post_vote(self, hash: str, direction: bool=True):
         """Vote on a map (not implemented)"""
         raise NotImplementedError()
         # https://partner.steamgames.com/doc/webapi/ISteamUserAuth

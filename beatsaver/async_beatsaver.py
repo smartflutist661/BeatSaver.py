@@ -9,19 +9,19 @@ class BeatSaverAsync(BaseWrapper):
     async def get_maps_id(self, id: str) -> MapDetail:
         """Get map information from a map ID"""
         result = await self._async_fetch(f"maps/id/{id}")
-        return MapDetail(result)
+        return MapDetail.from_data(result)
 
     async def get_maps_hash(self, hash: str) -> MapDetail:
         """Get map information from a map hash"""
         result = await self._async_fetch(f"maps/hash/{hash}")
-        return MapDetail(result)
+        return MapDetail.from_data(result)
 
     async def get_maps_uploader(self, id: str, page: int = 0) -> list:
         """Get maps by a user"""
         result = await self._async_fetch(f"maps/uploader/{id}/{page}")
         maps = list()
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
     async def get_maps_latest(self) -> list:
@@ -29,7 +29,7 @@ class BeatSaverAsync(BaseWrapper):
         result = await self._async_fetch("maps/latest")
         maps = list()
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
     async def get_maps_plays(self, page: int = 0 ) -> list:
@@ -37,13 +37,13 @@ class BeatSaverAsync(BaseWrapper):
         result = await self._async_fetch(f"maps/plays/{page}")
         maps = list()
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
     async def get_users_id(self, id: int) -> UserDetail:
         """Get user info"""
         result = await self._async_fetch(f"users/id/{id}")
-        return UserDetail(result)
+        return UserDetail.from_data(result)
 
     async def post_users_verify(self):
         """Verify user tokens (not implemented)"""
@@ -133,7 +133,7 @@ class BeatSaverAsync(BaseWrapper):
 
         result = await self._async_fetch(f"search/text/{page}?{parameters_url[1:]}")
         for doc in result["docs"]:
-            maps.append(MapDetail(doc))
+            maps.append(MapDetail.from_data(doc))
         return maps
 
     async def post_vote(self, hash: str, direction: bool = True):
